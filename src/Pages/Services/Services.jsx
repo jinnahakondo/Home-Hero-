@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import useSecureAxios from '../../Hooks/useSecureAxios';
 import useAuth from '../../Hooks/useAuth';
-import Loader from '../../Components/Loader/Loader';
 import Service from '../../Components/Service/Service';
+import ServiceSkeleton from '../../Components/Skeleton/HomeServiceSkeleton';
 
 const Services = () => {
     const { loading, user } = useAuth()
+    const [isLoading, setIsLoading] = useState(true)
     const [services, setServices] = useState([])
     const [filteredService, setFilteredService] = useState([])
     const instance = useSecureAxios();
@@ -17,6 +18,7 @@ const Services = () => {
                 .then(data => {
                     setServices(data.data)
                     setFilteredService(data.data)
+                    setIsLoading(false)
                 })
         }
     }, [instance, user])
@@ -52,10 +54,17 @@ const Services = () => {
 
             })
     }
-    console.log(filter);
-    if (loading) return <Loeader />
+
+    if (loading || isLoading) {
+        return <div className='max-w-7xl mx-auto mt-8 grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3  lg:grid-cols-4 xl:grid-cols-5 gap-6'>
+            {
+                [...Array(10)].map((i) => <ServiceSkeleton key={i} />)
+            }
+        </div>
+    }
+
     return (
-        <div className='max-w-7xl mx-auto px-5 mt-20'>
+        <div className='max-w-7xl mx-auto px-5 mt-40'>
             <h2 className='heading text-center mb-5'>All Services</h2>
             {/* filter  */}
             <div className='my-8 grid place-items-center'>
@@ -124,7 +133,7 @@ const Services = () => {
                     </div>
                 </>}
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+            <div className='grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3  lg:grid-cols-4 xl:grid-cols-5 gap-6'>
                 {filteredService.map(service => <Service key={service._id} service={service} />)}
             </div>
         </div>

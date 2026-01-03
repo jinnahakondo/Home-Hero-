@@ -3,8 +3,8 @@ import useAuth from './useAuth';
 import axios from 'axios';
 
 const instance = axios.create({
-    // baseURL: 'http://localhost:3000',
-    baseURL: 'https://home-hero-server-api.vercel.app',
+    baseURL: 'http://localhost:3000',
+    // baseURL: 'https://home-hero-server-api.vercel.app',
 });
 const useSecureAxios = () => {
     const { user } = useAuth()

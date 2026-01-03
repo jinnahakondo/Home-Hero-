@@ -22,15 +22,15 @@ const Service = ({ service }) => {
     };
 
     return (
-        <div className="h-full max-w-[350px] mx-auto">
-            <div className="h-full border border-base-300 rounded-lg bg-white hover:shadow-md transition p-4 flex flex-col">
+        
+            <div className="h-full w-full border border-base-300 rounded-xl bg-base-100 hover:shadow-lg transition p-5 flex flex-col">
 
                 {/* Image */}
-                <figure className="flex justify-center items-center h-56 mb-4">
+                <figure className="flex justify-center items-center h-40 mb-4">
                     <img
                         src={service.image}
                         alt={service.title}
-                        className="h-full object-contain"
+                        className="h-full object-cover"
                     />
                 </figure>
 
@@ -73,7 +73,7 @@ const Service = ({ service }) => {
                     View Details →
                 </Link>
             </div>
-        </div>
+      
     );
 };
 

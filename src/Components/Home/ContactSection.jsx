@@ -1,9 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { toast } from "react-toastify";
 
 const ContactSection = () => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handelSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true)
+    setTimeout(() => {
+      setIsLoading(false)
+      e.target.reset()
+      toast.success('Thanks! We received your message. We’ll contact you shortly.')
+    }, 3000);
+  }
   return (
-    <section className="bg-white py-20">
+    <section className="bg-white pb-20">
       <div className="container mx-auto md:px-6 lg:px-12">
 
         {/* Heading */}
@@ -59,7 +71,7 @@ const ContactSection = () => {
           </div>
 
           {/* Contact Form */}
-          <form className="bg-gray-50 rounded-md shadow-md p-8 space-y-6">
+          <form className="bg-gray-50 rounded-md shadow-md p-8 space-y-6" onSubmit={(e) => handelSubmit(e)}>
 
             <div>
               <label className="block text-gray-700 font-medium mb-2">
@@ -105,7 +117,9 @@ const ContactSection = () => {
               className="w-full bg-[var(--color-primary)] text-white font-semibold py-3 rounded-lg
               hover:opacity-90 transition"
             >
-              Send Message
+              {
+                isLoading ? 'message sending...' : ' Send Message'
+              }
             </button>
 
           </form>

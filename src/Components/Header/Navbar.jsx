@@ -74,7 +74,7 @@ const Navbar = () => {
 
                 </div>
                 <div className="navbar-end">
-                    <div className='mr-5 text-xl'>
+                    <div className='mr-5 text-xl text-primary'>
                         < FaShoppingCart />
                     </div>
                     <div className="flex-none">

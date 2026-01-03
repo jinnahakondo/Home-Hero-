@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-xs: 30rem;
+  --breakpoint-sm: 47rem;
+}
+
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark;
 }
@@ -51,13 +56,11 @@ td {
   padding: 8px;
 }
 
-/* a.active {
-  @apply btn btn-primary rounded-full
-} */
+a.active, a:hover {
+  @apply text-primary
+}
 
-/* a.hover, button.hover {
-  @apply hover:bg-transparent hover:border-primary hover:text-primary
-} */
+
 
 
 
@@ -91,11 +94,11 @@ td {
 /* inactive dots */
 .swiper-pagination-bullet {
   background-color: #9ca3af;
-  
+
 }
 
 /* active dot */
 .swiper-pagination-bullet-active {
   background-color: #f97316 !important;
- 
+
 }

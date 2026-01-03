@@ -14,6 +14,8 @@ import ServiceDetails from "../Components/ServiceDetails/ServiceDetails";
 import MyBookings from "../Pages/MyBookings/MyBookings";
 import Errorpage from "../Pages/Error page/Errorpage";
 import UserDashBoard from "../Layouts/userDashBoard/UserDashBoard";
+import About from "../Pages/About/About";
+import Contact from "../Pages/Contact/Contact";
 
 export const router = createBrowserRouter([
     {
@@ -27,6 +29,14 @@ export const router = createBrowserRouter([
             {
                 path: '/services',
                 Component: Services
+            },
+            {
+                path: '/about',
+                Component: About
+            },
+            {
+                path: '/contact',
+                Component: Contact
             },
             {
                 path: '/service-details/:id',
