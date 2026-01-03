@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: #ff6251;
+  --color-secondary: #51aa1b;
+  --color-accent: #050316;
+  --color-base: #fbfbfe;
+}
+
+.sidebar-link {
+  @apply flex items-center px-4 py-2 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary transition-all duration-200 my-4;
+}
+
+.sidebar-link.active {
+  @apply bg-primary text-white shadow;
+}
+
+
+
+
+
+
+
+/* body {
+  @apply bg-base-100
+} */
+
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+
+}
+
+tr {
+  border-bottom: 2px solid #ddd;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+/* a.active {
+  @apply btn btn-primary rounded-full
+} */
+
+/* a.hover, button.hover {
+  @apply hover:bg-transparent hover:border-primary hover:text-primary
+} */
+
+
+
+/* #0000004d */
+
+
+/* From Uiverse.io by alexruix */
+/* .service-card {
+  background: #f5f5f5;
+  position: relative;
+  border: 2px solid #c3c6ce;
+  transition: 0.5s ease-out;
+  overflow: visible;
+} */
+
+
+
+/*Hover*/
+/* .service-card:hover {
+  border-color: #008bf8;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+} */
+
+/* .service-card:hover .card-button {
+  transform: translateX(-50%);
+  opacity: 1;
+} */

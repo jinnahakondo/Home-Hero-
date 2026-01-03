@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "title": "Trusted & Verified Professionals",
+        "description": "Every service provider on our platform is background-checked and professionally trained to deliver top-quality results. We only work with skilled and reliable experts who maintain high standards of safety, cleanliness, and professionalism — so you can relax knowing your home is in safe hands."
+    },
+    {
+        "id": 2,
+        "title": "Affordable & Transparent Pricing",
+        "description": "We believe that great service shouldn’t come with a high price tag or hidden charges. That’s why we maintain clear and competitive pricing for all our services. You’ll know exactly what you’re paying for — no surprises, no extra costs. Our goal is to make professional household services accessible to everyone without compromising on quality."
+    },
+    {
+        "id": 3,
+        "title": "On-Time & Reliable Service",
+        "description": "Your time is valuable, and we respect that. Our professionals are known for being punctual, dependable, and efficient, ensuring every task is completed on schedule. From small repairs to big projects, we make sure the work is done right the first time — keeping your home running smoothly without unnecessary delays."
+    },
+    {
+        "id": 4,
+        "title": "100% Satisfaction Guarantee",
+        "description": "Your satisfaction is at the heart of everything we do. We stand by the quality of our work and offer a 100% satisfaction guarantee on every service. If something doesn’t meet your expectations, we’ll fix it promptly — because we’re not happy until you are. We believe in building long-term trust through honesty, quality, and care."
+    },
+    {
+        "id": 5,
+        "title": "Easy & Quick Booking Process",
+        "description": "Booking your household service has never been easier. With our simple online platform, you can choose your service, select a convenient time, and confirm your booking in just a few clicks. No complicated steps or phone calls — just quick, hassle-free scheduling that fits your lifestyle."
+    },
+    {
+        "id": 6,
+        "title": "Wide Range of Household Services",
+        "description": "Whether you need cleaning, electrical repairs, plumbing, appliance maintenance, or handyman support — we’ve got you covered. Our wide range of home maintenance and improvement services ensures you can find everything you need in one place. From everyday fixes to deep cleaning, we provide professional help for every corner of your home."
+    }
+]
