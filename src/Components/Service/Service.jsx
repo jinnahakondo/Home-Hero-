@@ -1,7 +1,26 @@
 import React from "react";
 import { Link } from "react-router";
+import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
 const Service = ({ service }) => {
+    const rating = service.rating || 0;
+
+    const renderStars = () => {
+        const stars = [];
+
+        for (let i = 1; i <= 5; i++) {
+            if (rating >= i) {
+                stars.push(<FaStar key={i} className="text-orange-400" />);
+            } else if (rating >= i - 0.5) {
+                stars.push(<FaStarHalfAlt key={i} className="text-orange-400" />);
+            } else {
+                stars.push(<FaRegStar key={i} className="text-gray-300" />);
+            }
+        }
+
+        return stars;
+    };
+
     return (
         <div className="h-full max-w-[350px] mx-auto">
             <div className="h-full border border-base-300 rounded-lg bg-white hover:shadow-md transition p-4 flex flex-col">
@@ -18,12 +37,20 @@ const Service = ({ service }) => {
                 {/* Content */}
                 <div className="space-y-2 grow">
                     <p className="text-sm text-gray-400">
-                        {service.category || "Featured Product"}
+                        {service.Category || "Featured Product"}
                     </p>
 
-                    <h3 className="text-lg font-semibold text-gray-800">
+                    <h3 className="text-base font-semibold text-gray-800">
                         {service.title}
                     </h3>
+
+                    {/* ⭐ Ratings */}
+                    <div className="flex items-center gap-1">
+                        {renderStars()}
+                        <span className="text-sm text-gray-500 ml-1">
+                            ({rating})
+                        </span>
+                    </div>
 
                     {/* Price */}
                     <div className="flex items-center gap-3">
@@ -33,7 +60,7 @@ const Service = ({ service }) => {
                             </p>
                         )}
                         <p className="text-orange-500 font-bold text-lg">
-                            ৳{service.Price}
+                            <span className="text-2xl">৳</span>{service.Price}
                         </p>
                     </div>
                 </div>

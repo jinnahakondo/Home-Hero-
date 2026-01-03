@@ -85,3 +85,17 @@ td {
   transform: translateX(-50%);
   opacity: 1;
 } */
+
+
+
+/* inactive dots */
+.swiper-pagination-bullet {
+  background-color: #9ca3af;
+  
+}
+
+/* active dot */
+.swiper-pagination-bullet-active {
+  background-color: #f97316 !important;
+ 
+}

@@ -4,17 +4,22 @@ import LatestServices from '../../Components/LatestServices/LatestServices';
 import ChooseUs from '../../Components/WhyChooseUs/ChooseUs';
 import useAuth from '../../Hooks/useAuth';
 import Loader from '../../Components/Loader/Loader';
+import TestimonialSlider from '../../Components/Home/Testimonials';
+// import BookingSection from '../../Components/Home/ContactSection';
+import ContactSection from '../../Components/Home/ContactSection';
 
 const Home = () => {
     const { loading } = useAuth()
-    if(loading){
-        return <Loader/>
+    if (loading) {
+        return <Loader />
     }
     return (
         <div>
             <Hero />
             <div className='max-w-7xl mx-auto space-y-20 px-5'>
                 <LatestServices />
+                <TestimonialSlider />
+                <ContactSection />
                 <ChooseUs />
             </div>
         </div>
