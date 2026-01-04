@@ -32,7 +32,7 @@ const Services = () => {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-5 mt-40">
+        <div className="max-w-7xl mx-auto px-5 mt-40 ">
             <h2 className="text-3xl font-bold text-center mb-8">All Services</h2>
 
             {/* Filter Section */}

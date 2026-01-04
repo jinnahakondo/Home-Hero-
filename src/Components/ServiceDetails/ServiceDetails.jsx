@@ -85,7 +85,7 @@ const ServiceDetails = () => {
     const isDisabled = user?.email === Email;
 
     return (
-        <div className='max-w-6xl mx-auto px-5 py-12'>
+        <div className='max-w-6xl mx-auto px-5 py-12 mt-30'>
             <button onClick={() => navigate(-1)} className='btn btn-ghost mb-6 gap-2'>
                 <HiArrowLeft /> Back to Services
             </button>
@@ -137,8 +137,8 @@ const ServiceDetails = () => {
 
             {/* Review Section */}
             <div className='mt-20 grid grid-cols-1 lg:grid-cols-2 gap-16'>
-                <div className='card bg-base-100 shadow-xl border border-base-200 p-8'>
-                    <h2 className='text-2xl font-bold mb-6'>Leave a Rating</h2>
+                <div className='card bg-base-100 shadow-xl border border-base-200 p-8 h-fit'>
+                    <h2 className='text-2xl font-bold mb-6'>Give a Rating</h2>
                     <form className='space-y-4' onSubmit={handleReview}>
                         <div className="form-control">
                             <label className="label"><span className="label-text font-semibold mr-3">
@@ -164,7 +164,7 @@ const ServiceDetails = () => {
                         <button type='submit' className='btn btn-primary w-full' disabled={!user || reviewMutation.isPending}>
                             {reviewMutation.isPending ? 'Posting...' : 'Post Review'}
                         </button>
-                        {!user && <p className='text-xs text-error mt-2 text-center'>Please login to leave a review.</p>}
+                        {!user && <p className='text-xs text-error mt-2 text-center'>Please login to give a review.</p>}
                     </form>
                 </div>
 

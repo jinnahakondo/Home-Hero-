@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: `/update-service/:id`,
-                loader: ({ params }) => fetch(`https://home-hero-server-api.vercel.app/services/${params.id}`),
+                loader: ({ params }) => fetch(`https://b-12-a10-home-hero-server.vercel.app/services/${params.id}`),
                 element: <PrivateRoutes>
                     <UpdateService />
                 </PrivateRoutes>

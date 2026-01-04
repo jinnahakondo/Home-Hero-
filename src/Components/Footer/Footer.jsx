@@ -1,63 +1,100 @@
 import React from 'react';
 import { Link } from 'react-router';
-import useAuth from '../../Hooks/useAuth';
+import { FaEnvelope, FaFacebook, FaGithub, FaInstagram, FaLinkedin, FaMapMarkerAlt, FaPhoneAlt, FaTwitter } from 'react-icons/fa';
 
 const Footer = () => {
-    const { user } = useAuth()
+    const iconsLink = [
+        { icon: <FaFacebook />, link: 'https://facebook.com/RobiulislamJinnah' },
+        { icon: <FaGithub />, link: 'https://www.github.com/jinnahakondo' },
+        { icon: <FaInstagram />, link: 'https://instagram.com' },
+        { icon: <FaLinkedin />, link: 'https://www.linkedin.com/in/jinnahakondo' }
+    ]
     return (
-        <div className='mt-20'>
-            <footer className="footer footer-horizontal footer-center bg-base-200 text-base-content rounded p-10">
-                <nav className="grid grid-flow-col gap-4">
-                    <Link to={'/'}>Home</Link>
-                    <Link to={'/services'}>Services</Link>
-                    {user && <>
-                        {/* <Link to={'/my-services'}>My Services</Link> */}
-                        <Link to={'/my-bookings'}>My Bookings</Link>
-                        <Link to={'/my-profile'}>My Profile</Link>
-                    </>}
-                </nav>
-                <nav>
-                    <div className="grid grid-flow-col gap-4">
-                        <a>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                className="fill-current">
-                                <path
-                                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
-                            </svg>
-                        </a>
-                        <a>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                className="fill-current">
-                                <path
-                                    d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-                            </svg>
-                        </a>
-                        <a>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                className="fill-current">
-                                <path
-                                    d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
-                            </svg>
-                        </a>
-                    </div>
-                </nav>
+        <footer className="bg-base-200 text-base-content border-t border-base-300">
+            {/* Top Section: Main Content */}
+            <div className="footer p-10 max-w-7xl mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                {/* Column 1: Brand & Social */}
                 <aside>
-                    <p>Copyright © {new Date().getFullYear()} - All right reserved by Home Hero Ltd</p>
+                    <div className="text-xl">
+                        <span className='text-primary'>Home</span>Hero
+                    </div>
+                    <p className="mt-2 opacity-80">
+                        Professional home services. Transforming spaces into experiences.
+                    </p>
+                    <div className="flex gap-4 mt-5">
+                        {
+                            iconsLink.map((social, i) => <Link
+                                key={i}
+                                to={social.link}
+                                className="btn btn-sm btn-circle  btn-outline btn-primary hover:text-white transition-all duration-300"
+                            >
+                                {social.icon}
+                            </Link>
+
+                            )
+                        }
+
+                    </div>
                 </aside>
-            </footer>
-        </div>
+
+                {/* Column 2: Quick Links */}
+                <nav>
+                    <h6 className="footer-title opacity-100 font-bold text-secondary">Links</h6>
+                    <Link to={'/'} className="link link-hover">Home</Link>
+                    <Link to={'/services'} className="link link-hover">Services</Link>
+                    <Link to={'/contact'} className="link link-hover">Contact</Link>
+                    <Link to={'/about'} className="link link-hover">About us</Link>
+                </nav>
+
+                {/* Column 3: Business Hours (Requirement) */}
+                <div>
+                    <h6 className="footer-title opacity-100 font-bold text-secondary">Working Hours</h6>
+                    <div className="space-y-2 text-sm">
+                        <div className="flex justify-between w-48">
+                            <span>Sat - Thu:</span>
+                            <span className="font-semibold text-primary">9AM - 8PM</span>
+                        </div>
+                        <div className="flex justify-between w-48">
+                            <span>Wednesday:</span>
+                            <span className="font-semibold text-primary">10AM - 6PM</span>
+                        </div>
+                        <div className="flex justify-between w-48">
+                            <span>Friday:</span>
+                            <span className="badge badge-outline badge-sm">Closed</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Column 4: Contact Details (Requirement) */}
+                <div>
+                    <h6 className="footer-title opacity-100 font-bold text-secondary">Contact Us</h6>
+                    <div className="space-y-3">
+                        <p className="flex items-center gap-3">
+                            <FaMapMarkerAlt className="text-primary" />
+                            Gaibandha, Rangpur, Bangladesh
+                        </p>
+                        <p className="flex items-center gap-3">
+                            <FaPhoneAlt className="text-primary" />
+                            +880 1403 703441
+                        </p>
+                        <p className="flex items-center gap-3">
+                            <FaEnvelope className="text-primary" />
+                            mdjinnahakondo.com
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Bottom Section: Copyright */}
+            <div className="footer footer-center p-6 border-t border-base-300 bg-base-300 text-base-content">
+                <aside>
+                    <p className=" font-medium">
+                        © {new Date().getFullYear()} <span className="text-primary font-bold"> <span className='text-primary'>Home</span>Hero</span>. All rights reserved.
+                    </p>
+                </aside>
+            </div>
+        </footer>
     );
 };
 
