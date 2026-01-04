@@ -3,11 +3,15 @@ import { Link, useNavigate } from 'react-router';
 import useAuth from '../../Hooks/useAuth';
 import { toast } from 'react-toastify';
 import Loader from '../../Components/Loader/Loader';
+import useAxios from '../../Hooks/useAxios';
 
 const Register = () => {
+
+    const instance = useAxios()
+
     const navigate = useNavigate()
     const { createUser, setLoading, updateUserProfile, googleSignIn, loading } = useAuth();
-    const handelCreateUser = (e) => {
+    const handelCreateUser = async (e) => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
@@ -23,19 +27,25 @@ const Register = () => {
         else if (!/[a-z]/.test(password)) {
             return toast.error("Password must have at least on lowercase");
         }
-        createUser(email, password)
-            .then(result => {
-                // console.log(result.user);
-                updateUserProfile({ displayName, photoURL })
-                    .then(() => {
-                        navigate('/')
-                        setLoading(false)
-                        toast.success('account created successfully')
-                    })
-            })
-            .catch(error => {
-               toast.error(error.code);
-            })
+
+        try {
+            const { user } = await createUser(email, password)
+
+            await updateUserProfile({ displayName, photoURL })
+
+            const userInfo = { userName: displayName, userEmail: user.email, userImage: photoURL, role: 'user' }
+            const res = await instance.post('/users', userInfo)
+            console.log(res.data);
+            navigate('/')
+            toast.success('account created successfully')
+
+        } catch (error) {
+            toast.error(error.code);
+        }
+        finally {
+            setLoading(false)
+        }
+
     }
 
     //login with google

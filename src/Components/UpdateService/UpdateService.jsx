@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useLoaderData, useNavigate, useParams } from 'react-router';
-import useSecureAxios from '../../Hooks/useSecureAxios';
+import instance from '../../Hooks/useSecureAxios';
 import { toast } from 'react-toastify';
 
 const UpdateService = () => {
     const navigate = useNavigate()
-    const instance = useSecureAxios();
+    const instance = instance();
     const service = useLoaderData()
     const { id } = useParams()
 

@@ -3,23 +3,27 @@ import { Link, NavLink } from 'react-router';
 import useAuth from '../../Hooks/useAuth';
 import { toast } from 'react-toastify';
 import { FaShoppingCart } from 'react-icons/fa';
+import useRole from '../../Hooks/UseRole';
 
 const Navbar = () => {
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "light")
     const { user, setLoading, logOut, } = useAuth()
-    // useEffect(() => {
-    //     const html = document.querySelector("html");
-    //     html.setAttribute("data-theme", theme)
-    //     localStorage.setItem("theme", theme)
-    //     const nav = document.querySelector('nav');
-    //     if (theme === 'dark') {
-    //         nav.style.backgroundColor = "black"
-    //     }
-    //     else {
-    //         nav.style.backgroundColor = "#fff"
-    //     }
+    useEffect(() => {
+        const html = document.querySelector("html");
+        html.setAttribute("data-theme", theme)
+        localStorage.setItem("theme", theme)
+        const nav = document.querySelector('nav');
+        if (theme === 'dark') {
+            nav.style.backgroundColor = "black"
+        }
+        else {
+            nav.style.backgroundColor = "#fff"
+        }
 
-    // }, [theme])
+    }, [theme])
+    const { role } = useRole()
+
+
     const handelLogOut = () => {
         logOut()
             .then(() => {
@@ -36,13 +40,6 @@ const Navbar = () => {
         <li><NavLink to={'/services'}>Services</NavLink></li>
         <li><NavLink to={'/about'}>About</NavLink></li>
         <li><NavLink to={'/contact'}>Contact</NavLink></li>
-
-        {user &&
-            <>
-                <li><NavLink to={'/my-services'}>My Services</NavLink></li>
-                <li><NavLink to={'/add-services'}>Add Service</NavLink></li>
-            </>
-        }
     </>
     // dark & light
     const handelTheme = (checked) => {
@@ -63,9 +60,9 @@ const Navbar = () => {
                             {links}
                         </ul>
                     </div>
-                    <a className=" text-xl font-bold ">
+                    <Link to={'/'} className=" text-xl font-bold ">
                         <span className='text-primary'>Home</span>Hero
-                    </a>
+                    </Link>
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1 space-x-5 font-medium ">
@@ -92,10 +89,26 @@ const Navbar = () => {
                                     tabIndex="-1"
                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box  mt-3 w-52 p-2 shadow z-10">
                                     <p>{user?.displayName}</p>
+                                    {
+                                        role === 'admin' && <>
+                                            <li>    <Link to={'/dashboard/admin'} >
+                                                Dashboard
+                                            </Link>
+                                            </li>
+                                        </>
+                                    }
+                                    {
+                                        role === 'user' && <>
+                                            <li>
+                                                <Link to={'/dashboard/user'} >
+                                                    Dashboard
+                                                </Link>
+                                            </li>
+                                        </>
+                                    }
                                     <li>
-                                        <Link to={'/my-profile'} > Profile</Link>
                                     </li>
-                                    <li><Link to={'/my-bookings'}>My Bookings</Link></li>
+
                                     <div className='ml-3'>
                                         <input type="checkbox"
                                             checked={theme == 'dark' ? true : false}

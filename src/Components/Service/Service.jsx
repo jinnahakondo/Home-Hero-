@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
 const Service = ({ service }) => {
-    const rating = service.rating || 0;
+    const rating = service.ratings || 0;
 
     const renderStars = () => {
         const stars = [];

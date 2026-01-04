@@ -20,7 +20,7 @@ const LatestServices = () => {
     if (loading) {
         return <div className='max-w-7xl mx-auto mt-20 grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3  lg:grid-cols-4 xl:grid-cols-5 gap-6'>
             {
-                [...Array(5)].map((i) => <ServiceSkeleton key={i} />)
+                [...Array(5)].map((_, i) => <ServiceSkeleton key={i} />)
             }
         </div>
     }

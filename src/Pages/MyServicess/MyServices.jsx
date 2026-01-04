@@ -49,7 +49,7 @@ const MyServices = () => {
 
     }
     return (
-        <div className='max-w-7xl mx-auto px-5 min-h-screen'>
+        <div className='max-w-7xl mx-auto px-5 min-h-screen mt-40'>
 
 
 

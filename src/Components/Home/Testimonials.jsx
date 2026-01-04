@@ -40,8 +40,8 @@ const TestimonialSlider = () => {
                     }}
                     modules={[EffectCoverflow, Pagination, Autoplay]}
                 >
-                    {testimonials.map((item) => (
-                        <SwiperSlide key={item.id}>
+                    {testimonials.map((item, i) => (
+                        <SwiperSlide key={item.id }>
                             <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col justify-between h-full">
                                 {/* Quote */}
                                 <p className="text-gray-600 italic mb-6 text-left">

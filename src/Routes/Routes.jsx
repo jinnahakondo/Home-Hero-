@@ -13,9 +13,11 @@ import UpdateService from "../Components/UpdateService/UpdateService";
 import ServiceDetails from "../Components/ServiceDetails/ServiceDetails";
 import MyBookings from "../Pages/MyBookings/MyBookings";
 import Errorpage from "../Pages/Error page/Errorpage";
-import UserDashBoard from "../Layouts/userDashBoard/UserDashBoard";
 import About from "../Pages/About/About";
 import Contact from "../Pages/Contact/Contact";
+import DashBoardLayout from "../Layouts/DashBoardLayout/DashBoardLayout";
+import UserRoutes from "./UserRoutes";
+import AdminRoutes from "./AdminRoutes";
 
 export const router = createBrowserRouter([
     {
@@ -40,15 +42,8 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/service-details/:id',
-                element: <PrivateRoutes>
-                    <ServiceDetails />
-                </PrivateRoutes>
-            },
-            {
-                path: '/my-services',
-                element: <PrivateRoutes>
-                    <MyServices />
-                </PrivateRoutes>
+                element: <ServiceDetails />
+
             },
             {
                 path: `/update-service/:id`,
@@ -57,24 +52,7 @@ export const router = createBrowserRouter([
                     <UpdateService />
                 </PrivateRoutes>
             },
-            {
-                path: '/add-services',
-                element: <PrivateRoutes>
-                    <AddServices />
-                </PrivateRoutes>
-            },
-            {
-                path: '/my-profile',
-                element: <PrivateRoutes>
-                    <Profile />
-                </PrivateRoutes>
-            },
-            {
-                path: '/my-bookings',
-                element: <PrivateRoutes>
-                    <MyBookings />
-                </PrivateRoutes>
-            },
+
         ]
     },
     {
@@ -96,7 +74,45 @@ export const router = createBrowserRouter([
         Component: Errorpage
     },
     {
-        path: '/dashboard',
-        Component: UserDashBoard
+        path: '/dashboard/admin',
+        element: <AdminRoutes>
+            <DashBoardLayout />
+        </AdminRoutes>,
+        children: [
+            {
+                path: 'add-services',
+                element: <AddServices />
+
+            },
+            {
+                path: 'my-services',
+                element: <MyServices />
+
+            },
+            {
+                path: 'my-profile',
+                element: <Profile />
+            },
+
+        ]
+    }
+    ,
+    {
+        path: '/dashboard/user',
+        element: <UserRoutes>
+            <DashBoardLayout />
+        </UserRoutes>
+        ,
+        children: [
+            {
+                path: 'my-bookings',
+                element: <MyBookings />
+            },
+            {
+                path: 'my-profile',
+                element: <Profile />
+            },
+
+        ]
     }
 ])

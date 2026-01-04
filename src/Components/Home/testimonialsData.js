@@ -24,7 +24,7 @@ export const testimonials = [
             "The magic formula that successful businesses have discovered is to treat customers",
     },
     {
-        id: 1,
+        id: 4,
         name: "Josh Batlar",
         role: "Factory Foreman",
         image: "https://i.pravatar.cc/150?img=12",
@@ -32,7 +32,7 @@ export const testimonials = [
             "The magic formula that successful businesses have discovered is to treat customers",
     },
     {
-        id: 2,
+        id: 5,
         name: "Joe Root",
         role: "Supervisor",
         image: "https://i.pravatar.cc/150?img=32",
@@ -40,7 +40,7 @@ export const testimonials = [
             "The magic formula that successful businesses have discovered is to treat customers",
     },
     {
-        id: 3,
+        id: 6,
         name: "Albert Krish",
         role: "Social Activist",
         image: "https://i.pravatar.cc/150?img=45",

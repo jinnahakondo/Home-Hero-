@@ -14,7 +14,7 @@ const MyBookings = () => {
 
 
     useEffect(() => {
-        instance.get(`/my-bookings?email=${user.email}`)
+        instance.get(`/my-bookings?email=${user?.email}`)
             .then(data => {
                 setMyBookings(data.data);
             })

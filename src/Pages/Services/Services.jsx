@@ -1,141 +1,121 @@
-import React, { useEffect, useState } from 'react';
-import useSecureAxios from '../../Hooks/useSecureAxios';
-import useAuth from '../../Hooks/useAuth';
-import Service from '../../Components/Service/Service';
-import ServiceSkeleton from '../../Components/Skeleton/HomeServiceSkeleton';
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import useAxios from "../../Hooks/useAxios";
+import Service from "../../Components/Service/Service";
+import ServiceSkeleton from "../../Components/Skeleton/HomeServiceSkeleton";
 
 const Services = () => {
-    const { loading, user } = useAuth()
-    const [isLoading, setIsLoading] = useState(true)
-    const [services, setServices] = useState([])
-    const [filteredService, setFilteredService] = useState([])
-    const instance = useSecureAxios();
-    const [filter, setFilter] = useState('')
+    const axios = useAxios();
+    const [filter, setFilter] = useState("");
+    const [minPrice, setMinPrice] = useState("");
+    const [maxPrice, setMaxPrice] = useState("");
 
-    useEffect(() => {
-        if (user) {
-            instance.get('/services')
-                .then(data => {
-                    setServices(data.data)
-                    setFilteredService(data.data)
-                    setIsLoading(false)
-                })
-        }
-    }, [instance, user])
+    // Fetch all services using TanStack Query
+    const { data: services = [], isLoading, refetch } = useQuery({
+        queryKey: ["services", minPrice, maxPrice],
+        queryFn: async () => {
+            let url = "/services";
+            if (filter === "by min price" && minPrice) url = `/filter-services?min=${minPrice}`;
+            else if (filter === "by max price" && maxPrice) url = `/filter-services?max=${maxPrice}`;
+            else if (filter === "by min-max price" && minPrice && maxPrice)
+                url = `/filter-services?min=${minPrice}&max=${maxPrice}`;
 
-    const handelMin = (e) => {
-        e.preventDefault()
-        const min = e.target.min.value;
-        // console.log(min);
-        instance.get(`/filter-services?min=${min}`)
-            .then(data => {
+            const res = await axios.get(url);
+            return res.data;
+        },
+        keepPreviousData: true,
+    });
 
-                setFilteredService(data.data)
-            })
-    }
-    const handelMax = (e) => {
-        e.preventDefault()
-        const max = e.target.max.value;
-        // console.log(max);
-        instance.get(`/filter-services?max=${max}`)
-            .then(data => {
-                setFilteredService(data.data)
-
-            })
-    }
-    const handelMinMax = (e) => {
-        e.preventDefault()
-        const min = e.target.min.value;
-        const max = e.target.max.value;
-        // console.log({ min, max });
-        instance.get(`/filter-services?min=${min}&&max=${max}`)
-            .then(data => {
-                setFilteredService(data.data)
-
-            })
-    }
-
-    if (loading || isLoading) {
-        return <div className='max-w-7xl mx-auto mt-8 grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3  lg:grid-cols-4 xl:grid-cols-5 gap-6'>
-            {
-                [...Array(10)].map((i) => <ServiceSkeleton key={i} />)
-            }
-        </div>
-    }
+    const handleFilterSubmit = (e) => {
+        e.preventDefault();
+        refetch();
+    };
 
     return (
-        <div className='max-w-7xl mx-auto px-5 mt-40'>
-            <h2 className='heading text-center mb-5'>All Services</h2>
-            {/* filter  */}
-            <div className='my-8 grid place-items-center'>
-                <div>
-                    <select onChange={(e) => { setFilter(e.target.value) }} name="filter" className='btn btn-primary'>
-                        <option disabled selected>filter</option>
-                        <option> by min price</option>
-                        <option> by max price</option>
-                        <option> by min-max price</option>
-                    </select>
+        <div className="max-w-7xl mx-auto px-5 mt-40">
+            <h2 className="text-3xl font-bold text-center mb-8">All Services</h2>
+
+            {/* Filter Section */}
+            <div className="bg-white rounded-xl p-6 mb-10 max-w-3xl mx-auto">
+                <form
+                    onSubmit={handleFilterSubmit}
+                    className="flex flex-col md:flex-row md:items-end md:gap-4 gap-4"
+                >
+                    {/* Filter Type */}
+                    <div className="flex-1">
+                        <label className="block mb-1 font-medium">Filter Type</label>
+                        <select
+                            value={filter}
+                            onChange={(e) => setFilter(e.target.value)}
+                            className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-primary outline-none"
+                            required
+                        >
+                            <option value="" disabled>
+                                Select filter
+                            </option>
+                            <option value="by min price">By Minimum Price</option>
+                            <option value="by max price">By Maximum Price</option>
+                            <option value="by min-max price">By Min-Max Price</option>
+                        </select>
+                    </div>
+
+                    {/* Min Price */}
+                    {(filter === "by min price" || filter === "by min-max price") && (
+                        <div className="flex-1">
+                            <label className="block mb-1 font-medium">Min Price</label>
+                            <input
+                                type="number"
+                                placeholder="Enter minimum price"
+                                value={minPrice}
+                                onChange={(e) => setMinPrice(e.target.value)}
+                                className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-primary outline-none"
+                                required
+                            />
+                        </div>
+                    )}
+
+                    {/* Max Price */}
+                    {(filter === "by max price" || filter === "by min-max price") && (
+                        <div className="flex-1">
+                            <label className="block mb-1 font-medium">Max Price</label>
+                            <input
+                                type="number"
+                                placeholder="Enter maximum price"
+                                value={maxPrice}
+                                onChange={(e) => setMaxPrice(e.target.value)}
+                                className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-primary outline-none"
+                                required
+                            />
+                        </div>
+                    )}
+
+                    <button
+                        type="submit"
+                        className="btn btn-primary  text-white font-semibold px-6 py-3 rounded-lg shadow-md transition-all"
+                    >
+                        Apply Filter
+                    </button>
+                </form>
+            </div>
+
+            {/* Services Grid */}
+            {isLoading ? (
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    {[...Array(10)].map((_, i) => (
+                        <ServiceSkeleton key={i} />
+                    ))}
                 </div>
-            </div>
-            <div>
-                {filter === "by min price" && <>
-                    {/*price min  */}
-                    <div className='flex flex-col gap-2 my-8'>
-
-                        <form onSubmit={handelMin}>
-                            <div className='max-w-3xl mx-auto mb-5'>
-                                <input type='number' onChange={(e) => { if (!e.target.value) { setFilteredService(services) } }} name="min" placeholder='minimum price' required className='border border-gray-300 rounded-lg p-3 outline-0 w-full'></input>
-                            </div>
-                            <div className='flex justify-center items-center '>
-                                <button
-                                    className='btn btn-primary px-7'>filter</button></div>
-                        </form>
-                    </div>
-                </>}
-                {filter === "by max price" && <>
-                    {/*price min  */}
-                    <div className='flex flex-col gap-2 my-8'>
-
-                        <form onSubmit={handelMax}>
-                            <div className='max-w-3xl mx-auto mb-5'>
-                                <input
-                                    onChange={(e) => { if (!e.target.value) { setFilteredService(services) } }}
-                                    type='number' name="max" placeholder='maximum price' required className='border border-gray-300 rounded-lg p-3 outline-0 w-full'></input>
-                            </div>
-                            <div className='flex justify-center items-center '>
-                                <button
-
-                                    className='btn btn-primary px-7'>filter</button></div>
-                        </form>
-                    </div>
-                </>}
-                {filter === "by min-max price" && <>
-                    {/*price min  */}
-                    <div className='flex flex-col gap-2 my-8'>
-
-                        <form onSubmit={handelMinMax}>
-                            <div className='max-w-3xl mx-auto mb-5'>
-                                <input
-                                    onChange={(e) => { if (!e.target.value) { setFilteredService(services) } }}
-                                    type='number' name="min" placeholder='minimum price' required className='border border-gray-300 rounded-lg p-3 outline-0 w-full'></input>
-                            </div>
-                            <div className='max-w-3xl mx-auto mb-5'>
-                                <input
-                                    onChange={(e) => { if (!e.target.value) { setFilteredService(services) } }}
-                                    type='number' name="max" placeholder='maximum price' required className='border border-gray-300 rounded-lg p-3 outline-0 w-full'></input>
-                            </div>
-
-                            <div className='flex justify-center items-center '>
-                                <button
-
-                                    className='btn btn-primary px-7'>filter</button></div>
-                        </form>
-                    </div>
-                </>}
-            </div>
-            <div className='grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3  lg:grid-cols-4 xl:grid-cols-5 gap-6'>
-                {filteredService.map(service => <Service key={service._id} service={service} />)}
-            </div>
+            ) : (
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    {services.length ? (
+                        services.map((service) => <Service key={service._id} service={service} />)
+                    ) : (
+                        <p className="text-center col-span-full text-gray-500">
+                            No services found for this filter.
+                        </p>
+                    )}
+                </div>
+            )}
         </div>
     );
 };

@@ -66,9 +66,9 @@ const Hero = () => {
                                 Expert Electrical Repairs <br /> & Installations
                             </h1>
 
-                            <p className="max-w-xl text-gray-200 mb-8">
+                            <div className="max-w-xl text-gray-200 mb-8">
                                 <p className='text-white  my-7 text-left'>From minor repairs to full wiring, our licensed electricians deliver fast and dependable service — ensuring safety and lasting performance. We’re  here to keep your home powered efficiently with quality you can trust.</p>
-                            </p>
+                            </div>
 
                             <Link to={'/services'} className="btn btn-primary py-3 font-semibold rounded">
                                 Get Our Services

@@ -1,188 +1,223 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'; // TanStack Query
 import useSecureAxios from '../../Hooks/useSecureAxios';
 import Loader from '../Loader/Loader';
 import useAuth from '../../Hooks/useAuth';
 import { toast } from 'react-toastify';
 import Review from '../Review/Review';
+import { HiArrowLeft, HiCalendar, HiCurrencyBangladeshi, HiUser } from "react-icons/hi";
 
 const ServiceDetails = () => {
-    const navigate = useNavigate()
-    const { user } = useAuth()
-    const modalRef = useRef()
-    const instance = useSecureAxios()
-    const { id } = useParams()
-    const [service, setService] = useState(null)
-    const [isDisabled, setIsDisabled] = useState(false)
+    const navigate = useNavigate();
+    const { user } = useAuth();
+    const modalRef = useRef();
+    const instance = useSecureAxios();
+    const { id } = useParams();
+    const queryClient = useQueryClient();
 
-    useEffect(() => {
-        instance.get(`/services/${id}`)
-            .then(data => {
-                setService(data.data || [])
+    const [userRating, setUserRating] = useState(5);
 
-            })
+    // useQuery
+    const { data: service, isLoading, error } = useQuery({
+        queryKey: ['service', id],
+        queryFn: async () => {
+            const res = await instance.get(`/services/${id}`);
+            return res.data;
+        },
+    });
 
-        // veryfing is service was created by me ?
-        if (user && service) {
-            if (user.email === service.Email) {
-                setIsDisabled(true)
+    // ২. useMutation
+    const reviewMutation = useMutation({
+        mutationFn: async (newReview) => {
+            return await instance.patch(`/services/reviews/${service._id}`, newReview);
+        },
+        onSuccess: () => {
+            toast.success('Review shared successfully!');
+            queryClient.invalidateQueries(['service', id]);
+            setUserRating(5);
+        }
+    });
+
+    // ৩. useMutation
+    const bookingMutation = useMutation({
+        mutationFn: async (newBooking) => {
+            return await instance.post('/bookings', newBooking);
+        },
+        onSuccess: (res) => {
+            if (res.data.insertedId) {
+                toast.success('Service booked successfully!');
+                modalRef.current.close();
             }
         }
+    });
 
-    }, [instance, id, user, service])
-
-    // for review 
-    const handelReview = (e) => {
+    const handleReview = (e) => {
         e.preventDefault();
-        const rating = e.target.rating.value;
-        const comment = e.target.comment.value;
-        const review = { user: user?.displayName, userImage: user?.photoURL, rating, comment, }
-        instance.patch(`/services/reviews/${service._id}`, review)
-            .then(() => {
-                toast.success('your comment has been saved')
-            })
+        const form = e.target;
+        const reviewData = {
+            user: user?.displayName,
+            userImage: user?.photoURL,
+            rating: userRating,
+            comment: form.comment.value,
+        };
+        reviewMutation.mutate(reviewData);
+        form.reset();
+    };
 
-    }
-
-
-    if (!service) {
-        return <Loader />
-    }
-
-    const handelSubmit = e => {
+    const handleBooking = e => {
         e.preventDefault();
-        const serveicId = service._id;
-        const serviceName = e.target.serviceName.value;
-        const Email = user.email;
-        const Price = e.target.price.value;
-        const bookingDate = e.target.bookingDate.value;
-        const newBooking = { serveicId, serviceName, serviceImage: service.image, Email, Price, bookingDate }
+        const bookingData = {
+            serviceId: service._id,
+            serviceName: service.title,
+            serviceImage: service.image,
+            customerEmail: user?.email,
+            price: e.target.price.value,
+            bookingDate: e.target.bookingDate.value
+        };
+        bookingMutation.mutate(bookingData);
+    };
 
-        instance.post('/bookings', newBooking)
-            .then(data => {
-                if (data.data.insertedId) {
-                    toast.success('service has been booked')
-                    modalRef.current.close()
-                }
-            })
+    if (isLoading) return <Loader />;
+    if (error || !service) return <div className="text-center mt-20 text-error font-bold">Something went wrong or Service not found.</div>;
 
-    }
-    // console.log(service.image);
+    const { title, Price, Description, image, Email, created_at, created_by, serviceReviews } = service;
+    const isDisabled = user?.email === Email;
+
     return (
-        <div className='max-w-7xl mx-auto px-5 mt-20 min-h-screen'>
+        <div className='max-w-6xl mx-auto px-5 py-12'>
+            <button onClick={() => navigate(-1)} className='btn btn-ghost mb-6 gap-2'>
+                <HiArrowLeft /> Back to Services
+            </button>
 
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-7'>
-                <div>
-                    <img src={service.image} alt="" />
+            <div className='grid grid-cols-1 lg:grid-cols-12 gap-10'>
+                {/* Left: Image */}
+                <div className='lg:col-span-7'>
+                    <div className='rounded-3xl overflow-hidden shadow-2xl bg-base-300'>
+                        <img src={image} alt={title} className='w-full h-[450px] object-cover hover:scale-105 transition-transform duration-500' />
+                    </div>
                 </div>
-                <div className='space-y-2'>
-                    <h2 className='text-lg  md:text-2xl lg:text-4xl font-bold mb-3'>{service.title}</h2>
-                    <p className='font-medium'>BDT {service.Price}</p>
+
+                {/* Right: Info */}
+                <div className='lg:col-span-5 space-y-6'>
                     <div>
-                        <p className='text-gray-500 font-bold'>description:</p>
-                        <p className='text-gray-500'>{service.Description}</p>
+                        <div className="badge badge-primary mb-2 capitalize">{service.Category || 'Service'}</div>
+                        <h1 className='text-3xl md:text-4xl font-extrabold text-base-content'>{title}</h1>
                     </div>
-                    <p className='text-gray-500'>Provider Name: {service.provider}</p>
-                    <p className='text-gray-500'>Provider Email: {service.Email}</p>
-                    <p className='text-gray-500'>published date: {service.created_at}</p>
 
-                </div>
-            </div>
-            <div className='mt-10 flex input-accent gap-5'>
-                <button onClick={() => navigate(-1)} className='btn py-5 bg-black text-white'>Go Back</button>
-                <button onClick={() => { modalRef.current.showModal() }} disabled={isDisabled} className='btn btn-primary px-8'>Book now</button>
-            </div>
-
-            {/* <-----reviews section-----> */}
-
-            <div className=''>
-                <h2 className='heading mt-10 mb-7 text-center'>Rate this service</h2>
-                <form className='space-y-10' onSubmit={handelReview}>
-                    <select className='btn bg-amber-500 border border-gray-600 rounded-lg' name='rating'>
-                        <option disabled defaultValue={''}>select for rating</option>
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
-                    </select>
-                    {/*Description  */}
-                    <div className='flex flex-col gap-2'>
-                        <textarea name="comment" placeholder='What do you think about this servic?' rows="7" required className='border border-gray-300 rounded-lg p-3 outline-0'></textarea>
+                    <div className='flex items-center gap-2 text-2xl font-bold text-primary'>
+                        <HiCurrencyBangladeshi />
+                        <span>{Price} BDT</span>
                     </div>
-                    <div className=''>
-                        <button type='submit' className='btn btn-primary'>Comment</button>
-                    </div>
-                </form>
-            </div>
 
+                    <div className='p-6 bg-base-200 rounded-2xl space-y-4 border border-base-300'>
+                        <p className='text-base-content/70 leading-relaxed'>
+                            <span className='font-bold text-base-content block mb-1'>Description:</span>
+                            {Description}
+                        </p>
 
-            {/* see review  */}
+                        <div className='divider'></div>
 
-            <div className='flex flex-col gap-5'>
-                <h3 className='text-xl font-bold text-primary mt-20 mb-5'>Reviews</h3>
-                {
-                    service.serviceReviews &&
-                    service?.serviceReviews.map((review, i) => <Review key={i} review={review} />)
-                }
-            </div>
-            {/* </----reviews section-----> */}
-
-
-
-            {/* modal  */}
-            <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box max-sm:p-0">
-                    <div className='max-w-3xl rounded-2xl mx-5 md:mx-auto bg-white  p-7 ' >
-                        <div>
-                            <div>
-                                <img src={service.image} alt={service.title} />
-                            </div>
-                            <h3 className='text-xl font-semibold mb-3'>{service.title}</h3>
+                        <div className='space-y-2 text-sm'>
+                            <div className='flex items-center gap-2'><HiUser className='text-primary' /> <span>Provider: <strong>{created_by}</strong></span></div>
+                            <div className='flex items-center gap-2 text-base-content/60 italic'><span>{Email}</span></div>
+                            <div className='flex items-center gap-2 text-base-content/60'><HiCalendar /> <span>Published: {new Date(created_at).toLocaleDateString()}</span></div>
                         </div>
-                        <h2 className='heading mb-4 mt-5'>Booking Service</h2>
-                        <form className='space-y-4' onSubmit={handelSubmit}>
-
-                            {/* Service title  */}
-                            <div className='flex flex-col gap-2'>
-                                <label>Service Title</label>
-                                <input type="text"
-                                    value={service.title}
-                                    readOnly
-                                    name='serviceName' className='h-12 rounded-lg border px-5 border-gray-300 outline-0' />
-                            </div>
-                            {/* User Email  */}
-                            <div className='flex flex-col gap-2'>
-                                <label>User Email</label>
-                                <input type="email"
-                                    value={user.email}
-                                    readOnly
-                                    name='userEmail' className='h-12 rounded-lg border px-5 border-gray-300 outline-0' />
-                            </div>
-                            {/*Price */}
-                            <div className='flex flex-col gap-2'>
-                                <label>Price</label>
-                                <input type="text" defaultValue={service.Price} name='price' className='h-12 rounded-lg border px-5 border-gray-300 outline-0' />
-                            </div>
-                            {/* Booking Date */}
-                            <div className='flex flex-col gap-2'>
-                                <label>Booking Date</label>
-                                <input type="date" required placeholder='category' name='bookingDate' className='h-12 rounded-lg border px-5 border-gray-300 outline-0' />
-                            </div>
-
-                            <div className=' mt-10 flex justify-between items-center'>
-                                <button className='btn' onClick={(e) => {
-                                    e.preventDefault()
-                                    modalRef.current.close()
-                                }}>close</button>
-                                <button type='submit' className='btn btn-primary text-white'>Book</button>
-                            </div>
-                        </form>
                     </div>
 
+                    <button
+                        onClick={() => user ? modalRef.current.showModal() : navigate('/auth')}
+                        disabled={isDisabled}
+                        className='btn btn-primary btn-lg w-full shadow-lg shadow-primary/20 rounded'
+                    >
+                        {isDisabled ? "You own this service" : "Book Service Now"}
+                    </button>
                 </div>
-            </dialog>
+            </div>
 
+            {/* Review Section */}
+            <div className='mt-20 grid grid-cols-1 lg:grid-cols-2 gap-16'>
+                <div className='card bg-base-100 shadow-xl border border-base-200 p-8'>
+                    <h2 className='text-2xl font-bold mb-6'>Leave a Rating</h2>
+                    <form className='space-y-4' onSubmit={handleReview}>
+                        <div className="form-control">
+                            <label className="label"><span className="label-text font-semibold mr-3">
+                                Rating Score</span></label>
+                            <div className="rating rating-lg gap-1">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <input
+                                        key={star}
+                                        type="radio"
+                                        name="rating-star"
+                                        className="mask mask-star-2 bg-orange-400"
+                                        checked={userRating === star}
+                                        onChange={() => setUserRating(star)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        <div className="form-control">
+                            <label className="label"><span className="label-text font-semibold mr-3">
+                                Your Comment</span></label>
+                            <textarea name="comment" placeholder='Share your experience...' rows="4" required className='textarea textarea-bordered text-base'></textarea>
+                        </div>
+                        <button type='submit' className='btn btn-primary w-full' disabled={!user || reviewMutation.isPending}>
+                            {reviewMutation.isPending ? 'Posting...' : 'Post Review'}
+                        </button>
+                        {!user && <p className='text-xs text-error mt-2 text-center'>Please login to leave a review.</p>}
+                    </form>
+                </div>
+
+                <div>
+                    <h3 className='text-2xl font-bold mb-6 flex items-center gap-3'>
+                        Customer Reviews
+                        <div className="badge badge-ghost">{serviceReviews?.length || 0}</div>
+                    </h3>
+                    <div className='space-y-4 max-h-[500px] overflow-y-auto pr-2'>
+                        {serviceReviews?.length > 0 ? (
+                            serviceReviews.map((rev, i) => <Review key={i} review={rev} />)
+                        ) : (
+                            <div className="bg-base-200 p-10 rounded-2xl text-center text-base-content/50">No reviews yet.</div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Booking Modal */}
+            <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
+                <div className="modal-box">
+                    <form method="dialog">
+                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                    </form>
+                    <h3 className="font-bold text-2xl mb-4 text-primary text-center">Confirm Booking</h3>
+                    <form onSubmit={handleBooking} className="space-y-4">
+                        <div className="form-control">
+                            <label className="label text-xs font-bold uppercase">Service</label>
+                            <input type="text" value={title} readOnly className='input input-bordered bg-base-200 cursor-not-allowed' />
+                        </div>
+                        <div className="form-control">
+                            <label className="label text-xs font-bold uppercase">Your Email</label>
+                            <input type="email" value={user?.email} readOnly className='input input-bordered bg-base-200 cursor-not-allowed' />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="form-control">
+                                <label className="label text-xs font-bold uppercase">Price (BDT)</label>
+                                <input type="text" defaultValue={Price} name='price' className='input input-bordered' />
+                            </div>
+                            <div className="form-control">
+                                <label className="label text-xs font-bold uppercase">Date</label>
+                                <input type="date" required name='bookingDate' className='input input-bordered' />
+                            </div>
+                        </div>
+                        <button type='submit' className='btn btn-primary w-full mt-6 uppercase' disabled={bookingMutation.isPending}>
+                            {bookingMutation.isPending ? 'Processing...' : 'Confirm Purchase'}
+                        </button>
+                    </form>
+                </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
         </div>
     );
 };

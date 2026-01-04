@@ -30,7 +30,7 @@ const AddServices = () => {
 
     }
     return (
-        <div className='max-w-7xl mx-auto my-20 '>
+        <div className='max-w-7xl mx-auto mt-40np mb-20 '>
             <div className='max-w-3xl rounded-2xl mx-5 md:mx-auto bg-white mt-20 p-7 ' >
                 <h2 className='heading mb-4'>Add Service</h2>
                 <form className='space-y-4' onSubmit={handelSubmit}>

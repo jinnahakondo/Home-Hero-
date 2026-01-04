@@ -15,7 +15,7 @@ const ContactSection = () => {
     }, 3000);
   }
   return (
-    <section className="bg-white pb-20">
+    <section className="bg-white py-20">
       <div className="container mx-auto md:px-6 lg:px-12">
 
         {/* Heading */}
