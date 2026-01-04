@@ -63,7 +63,7 @@ const Login = () => {
     if (loading) return <Loader />;
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-12 w-full">
+        <div className="flex items-center justify-center px-4 py-12 w-full">
             <div className="max-w-lg w-full bg-base-100 shadow-2xl rounded-3xl overflow-hidden border border-base-300">
                 <div className="p-8">
                     {/* Header */}
@@ -130,7 +130,7 @@ const Login = () => {
                                 emailRef.current.value = demoCredentials.admin.email;
                                 passwordRef.current.value = demoCredentials.admin.password;
                             }}
-                            className="btn btn-sm btn-primary btn-outline rounded-lg text-[10px] opacity-70"
+                            className="btn btn-sm btn-primary btn-outline rounded-lg text-xs"
                         > Admin Demo </button>
                         <button
                             type="button"
@@ -138,7 +138,7 @@ const Login = () => {
                                 emailRef.current.value = demoCredentials.user.email;
                                 passwordRef.current.value = demoCredentials.user.password;
                             }}
-                            className="btn btn-sm btn-primary btn-outline rounded-lg text-[10px] opacity-70"
+                            className="btn btn-primary btn-sm btn-outline rounded-lg text-xs "
                         > User Demo </button>
                     </div>
 

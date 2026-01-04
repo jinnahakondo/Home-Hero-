@@ -10,7 +10,7 @@ const Footer = () => {
         { icon: <FaLinkedin />, link: 'https://www.linkedin.com/in/jinnahakondo' }
     ]
     return (
-        <footer className="bg-base-200 text-base-content border-t border-base-300">
+        <footer className="bg-base-200 text-base-content border-t border-base-300 mt-20">
             {/* Top Section: Main Content */}
             <div className="footer p-10 max-w-7xl mx-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 

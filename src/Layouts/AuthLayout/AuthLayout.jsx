@@ -9,14 +9,14 @@ const AuthLayout = () => {
             <header>
                 <Navbar />
             </header>
-            <main className='max-w-7xl px-5 my-20 mx-auto h-[70vh] flex justify-center items-center'>
+            <main className='max-w-7xl px-5 my-20 mx-auto min-h-[90vh] flex justify-center items-center'>
                 <Outlet></Outlet>
             </main>
-            <footer>
+            {/* <footer>
                 <div className='max-w-7xl mx-auto pl-6'>
                     <Footer />
                 </div>
-            </footer>
+            </footer> */}
         </div>
     );
 };

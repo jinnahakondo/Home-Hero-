@@ -72,13 +72,13 @@ const Register = () => {
     if (loading) return <Loader />;
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 py-12">
+        <div className=" flex items-center justify-center px-4 py-12">
             <div className="max-w-lg w-full bg-base-100 shadow-2xl rounded-3xl overflow-hidden border border-base-300">
                 <div className="p-8 md:p-10">
                     {/* Header */}
                     <div className="text-center mb-8">
                         <h2 className="text-3xl font-extrabold text-base-content mb-2">Create Account</h2>
-                        <p className="text-sm text-base-content/60">Join us to access all services</p>
+                        <p className="text-sm text-base-content/60">Join us to access all premium services</p>
                     </div>
 
                     {/* Social Sign Up */}
