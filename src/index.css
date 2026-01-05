@@ -17,15 +17,244 @@
   --color-primary: #ff6251;
   --color-secondary: #51aa1b;
   --color-accent: #050316;
-  --color-base: #fbfbfe;
+  --color-base: #ffffff;
+  --color-base-100: #ffffff;
+  --color-base-200: #f8fafc;
+  --color-base-300: #e2e8f0;
+  --color-base-content: #1e293b;
+  --color-neutral: #64748b;
+  --color-neutral-content: #ffffff;
+  --color-info: #3b82f6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  --color-primary: #ff6251;
+  --color-secondary: #51aa1b;
+  --color-accent: #050316;
+  --color-base: #0f172a;
+  --color-base-100: #1e293b;
+  --color-base-200: #334155;
+  --color-base-300: #475569;
+  --color-base-content: #f1f5f9;
+  --color-neutral: #64748b;
+  --color-neutral-content: #f1f5f9;
+  --color-info: #60a5fa;
+  --color-success: #34d399;
+  --color-warning: #fbbf24;
+  --color-error: #f87171;
 }
 
 .sidebar-link {
-  @apply flex items-center px-4 py-2 rounded-lg text-gray-600 hover:bg-primary/10 hover:text-primary transition-all duration-200 my-4;
+  @apply flex items-center px-4 py-2 rounded-lg text-base-content/70 hover:bg-primary/10 hover:text-primary transition-all duration-200 my-4;
 }
 
 .sidebar-link.active {
   @apply bg-primary text-white shadow;
+}
+
+/* Global Card Styles */
+.service-card {
+  @apply bg-base-100 border border-base-300 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden;
+  height: 400px;
+  /* Consistent height */
+}
+
+.service-card:hover {
+  @apply border-primary/30 shadow-primary/10;
+  transform: translateY(-2px);
+}
+
+/* Skeleton Loader */
+.skeleton {
+  @apply animate-pulse bg-base-300 rounded;
+}
+
+.skeleton-text {
+  @apply h-4 bg-base-300 rounded animate-pulse;
+}
+
+.skeleton-avatar {
+  @apply w-12 h-12 bg-base-300 rounded-full animate-pulse;
+}
+
+/* Form Validation Styles */
+.form-input {
+  @apply w-full px-4 py-3 border border-base-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200 bg-base-100 text-base-content;
+}
+
+.form-input.error {
+  @apply border-error focus:ring-error/20 focus:border-error;
+}
+
+.form-input.success {
+  @apply border-success focus:ring-success/20 focus:border-success;
+}
+
+.error-message {
+  @apply text-error text-sm mt-1 flex items-center gap-1;
+}
+
+.success-message {
+  @apply text-success text-sm mt-1 flex items-center gap-1;
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply bg-primary hover:bg-primary/90 text-white border-primary hover:border-primary/90 transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply bg-secondary hover:bg-secondary/90 text-white border-secondary hover:border-secondary/90 transition-all duration-200;
+}
+
+/* Dark mode specific adjustments */
+[data-theme="dark"] .service-card {
+  @apply bg-base-200 border-base-100 shadow-lg;
+}
+
+[data-theme="dark"] .service-card:hover {
+  @apply border-primary/50 shadow-primary/20;
+}
+
+[data-theme="dark"] .form-input {
+  @apply bg-base-200 border-base-100 text-base-content;
+}
+
+[data-theme="dark"] .form-input:focus {
+  @apply bg-base-100;
+}
+
+/* Enhanced visibility for alerts and notifications */
+[data-theme="dark"] .alert {
+  @apply bg-base-200 border-base-100 text-base-content;
+}
+
+[data-theme="light"] .alert {
+  @apply bg-base-100 border-base-300 text-base-content;
+}
+
+/* Table styles for better visibility */
+[data-theme="dark"] table {
+  @apply bg-base-200;
+}
+
+[data-theme="dark"] th {
+  @apply bg-base-300 text-base-content border-base-100;
+}
+
+[data-theme="dark"] td {
+  @apply border-base-100 text-base-content;
+}
+
+[data-theme="light"] table {
+  @apply bg-base-100;
+}
+
+[data-theme="light"] th {
+  @apply bg-base-200 text-base-content border-base-300;
+}
+
+[data-theme="light"] td {
+  @apply border-base-300 text-base-content;
+}
+
+/* Dropdown and modal styles */
+[data-theme="dark"] .dropdown-content {
+  @apply bg-base-200 border-base-100 shadow-xl;
+}
+
+[data-theme="light"] .dropdown-content {
+  @apply bg-base-100 border-base-300 shadow-xl;
+}
+
+/* Navigation styles */
+[data-theme="dark"] .navbar {
+  @apply bg-base-100/95 border-base-200;
+}
+
+[data-theme="light"] .navbar {
+  @apply bg-base-100/95 border-base-300;
+}
+
+/* Stats and dashboard cards */
+.stats-card {
+  @apply bg-base-100 border border-base-300 rounded-xl p-6 shadow-sm hover:shadow-lg transition-all duration-300;
+}
+
+[data-theme="dark"] .stats-card {
+  @apply bg-base-200 border-base-100 shadow-lg;
+}
+
+/* Hero section styles */
+.hero-section {
+  @apply bg-gradient-to-br from-base-100 via-base-200 to-base-300;
+}
+
+[data-theme="dark"] .hero-section {
+  @apply from-base-100 via-base-200 to-base-300;
+}
+
+/* Focus states for accessibility */
+.focus-visible {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2;
+}
+
+[data-theme="dark"] .focus-visible {
+  @apply focus:ring-offset-base-100;
+}
+
+[data-theme="light"] .focus-visible {
+  @apply focus:ring-offset-base-100;
+}
+
+/* Responsive Grid */
+.service-grid {
+  @apply grid gap-6;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+@media (min-width: 1024px) {
+  .service-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .service-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Text truncation utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 
@@ -43,20 +272,30 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
   width: 100%;
-
+  @apply bg-base-100;
 }
 
 tr {
-  border-bottom: 2px solid #ddd;
+  @apply border-b-2 border-base-300;
 }
 
 th,
 td {
   text-align: left;
   padding: 8px;
+  @apply text-base-content;
 }
 
-a.active, a:hover {
+[data-theme="dark"] table {
+  @apply bg-base-200;
+}
+
+[data-theme="dark"] tr {
+  @apply border-base-100;
+}
+
+a.active,
+a:hover {
   @apply text-primary
 }
 
@@ -101,4 +340,54 @@ a.active, a:hover {
 .swiper-pagination-bullet-active {
   background-color: #f97316 !important;
 
+}
+
+/* Swiper pagination bullets for dark mode */
+[data-theme="dark"] .swiper-pagination-bullet {
+  background-color: rgba(241, 245, 249, 0.3);
+}
+
+[data-theme="dark"] .swiper-pagination-bullet-active {
+  background-color: #ff6251 !important;
+}
+
+/* Enhanced section backgrounds */
+[data-theme="dark"] section {
+  @apply text-base-content;
+}
+
+[data-theme="light"] section {
+  @apply text-base-content;
+}
+
+/* Gradient backgrounds that work in both light and dark modes */
+.gradient-primary-to-secondary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+/* Ensure gradient sections maintain proper contrast */
+[data-theme="dark"] .gradient-primary-to-secondary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+[data-theme="light"] .gradient-primary-to-secondary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+}
+
+/* Newsletter and CTA section specific styles */
+.newsletter-section,
+.cta-section {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: white;
+}
+
+/* Ensure white text is always visible on gradient backgrounds */
+.newsletter-section *,
+.cta-section * {
+  color: white !important;
+}
+
+.newsletter-section input::placeholder,
+.cta-section input::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
 }

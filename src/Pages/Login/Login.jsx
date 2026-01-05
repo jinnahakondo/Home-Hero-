@@ -1,18 +1,20 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { FcGoogle } from "react-icons/fc";
 import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi";
-import Loader from '../../Components/Loader/Loader';
 import useAuth from '../../Hooks/useAuth';
 import instance from '../../Hooks/useAxios';
+import LoadingButton from '../../Components/Loading/LoadingButton';
 
 const Login = () => {
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
     const navigate = useNavigate();
-    const { login, setLoading, googleSignIn, loading } = useAuth();
+    const { login, googleSignIn } = useAuth();
     const axiosSecure = instance();
+    const [isLoading, setIsLoading] = useState(false);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
     const demoCredentials = {
         admin: { email: "admin@gmail.com", password: "Asdf@1234" },
@@ -27,7 +29,7 @@ const Login = () => {
         if (!/^.{6,}$/.test(password)) return toast.error("Min 6 characters required");
 
         try {
-            setLoading(true);
+            setIsLoading(true);
             const userCredential = await login(email, password);
             localStorage.setItem("access-token", userCredential.user.accessToken);
             toast.success("Welcome Back!");
@@ -35,13 +37,13 @@ const Login = () => {
         } catch (error) {
             toast.error(error?.code || "Login failed");
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
     const handleGoogleSignIn = async () => {
         try {
-            setLoading(true);
+            setIsGoogleLoading(true);
             const { user } = await googleSignIn();
             localStorage.setItem("access-token", user.accessToken);
             const userInfo = {
@@ -56,11 +58,10 @@ const Login = () => {
         } catch (error) {
             toast.error("Google Sign-in failed");
         } finally {
-            setLoading(false);
+            setIsGoogleLoading(false);
         }
     };
 
-    if (loading) return <Loader />;
 
     return (
         <div className="flex items-center justify-center px-4 py-12 w-full">
@@ -73,12 +74,15 @@ const Login = () => {
                     </div>
 
                     {/* Social Login */}
-                    <button
+                    <LoadingButton
                         onClick={handleGoogleSignIn}
-                        className="btn btn-outline w-full rounded-xl flex items-center gap-3 border-base-300 hover:bg-base-200 transition-all font-semibold"
+                        loading={isGoogleLoading}
+                        loadingText="Signing in..."
+                        variant="outline"
+                        className="w-full rounded-xl flex items-center gap-3 border-base-300 hover:bg-base-200 transition-all font-semibold"
                     >
                         <FcGoogle className="text-2xl" /> Login with Google
-                    </button>
+                    </LoadingButton>
 
                     <div className="divider my-8 text-xs text-base-content/40 uppercase tracking-widest">or continue with email</div>
 
@@ -117,9 +121,15 @@ const Login = () => {
                             </div>
                         </div>
 
-                        <button className="btn btn-primary w-full rounded-xl text-white shadow-lg shadow-primary/30 mt-2">
+                        <LoadingButton
+                            type="submit"
+                            loading={isLoading}
+                            loadingText="Signing in..."
+                            className="w-full rounded-xl text-white shadow-lg shadow-primary/30 mt-2"
+                            variant="primary"
+                        >
                             Sign In
-                        </button>
+                        </LoadingButton>
                     </form>
 
                     {/* Demo Logins */}

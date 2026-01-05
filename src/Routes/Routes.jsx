@@ -15,63 +15,79 @@ import MyBookings from "../Pages/MyBookings/MyBookings";
 import Errorpage from "../Pages/Error page/Errorpage";
 import About from "../Pages/About/About";
 import Contact from "../Pages/Contact/Contact";
+import Help from "../Pages/Help/Help";
 import DashBoardLayout from "../Layouts/DashBoardLayout/DashBoardLayout";
 import UserRoutes from "./UserRoutes";
 import AdminRoutes from "./AdminRoutes";
+import DashboardOverview from "../Pages/Dashboard/DashboardOverview";
 
 export const router = createBrowserRouter([
     {
         path: '/',
-        Component: MainLayout,
+        element: <MainLayout />,
         children: [
             {
                 index: true,
-                Component: Home
+                element: <Home />
             },
             {
                 path: '/services',
-                Component: Services
+                element: <Services />
             },
             {
                 path: '/about',
-                Component: About
+                element: <About />
             },
             {
                 path: '/contact',
-                Component: Contact
+                element: <Contact />
+            },
+            {
+                path: '/help',
+                element: <Help />
             },
             {
                 path: '/service-details/:id',
                 element: <ServiceDetails />
-
             },
             {
                 path: `/update-service/:id`,
-                loader: ({ params }) => fetch(`https://b-12-a10-home-hero-server.vercel.app/services/${params.id}`),
+                loader: ({ params }) => {
+                    return fetch(`https://b-12-a10-home-hero-server.vercel.app/services/${params.id}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Response("Service not found", { status: 404 });
+                            }
+                            return response.json();
+                        })
+                        .catch(error => {
+                            console.error('Error loading service:', error);
+                            throw new Response("Failed to load service", { status: 500 });
+                        });
+                },
                 element: <PrivateRoutes>
                     <UpdateService />
                 </PrivateRoutes>
             },
-
         ]
     },
     {
         path: '/auth',
-        Component: AuthLayout,
+        element: <AuthLayout />,
         children: [
             {
                 index: true,
-                Component: Login
+                element: <Login />
             },
             {
                 path: '/auth/register',
-                Component: Register
+                element: <Register />
             }
         ]
     },
     {
         path: '*',
-        Component: Errorpage
+        element: <Errorpage />
     },
     {
         path: '/dashboard/admin',
@@ -80,30 +96,33 @@ export const router = createBrowserRouter([
         </AdminRoutes>,
         children: [
             {
+                index: true,
+                element: <DashboardOverview />
+            },
+            {
                 path: 'add-services',
                 element: <AddServices />
-
             },
             {
                 path: 'my-services',
                 element: <MyServices />
-
             },
             {
                 path: 'my-profile',
                 element: <Profile />
             },
-
         ]
-    }
-    ,
+    },
     {
         path: '/dashboard/user',
         element: <UserRoutes>
             <DashBoardLayout />
-        </UserRoutes>
-        ,
+        </UserRoutes>,
         children: [
+            {
+                index: true,
+                element: <DashboardOverview />
+            },
             {
                 path: 'my-bookings',
                 element: <MyBookings />
@@ -112,7 +131,6 @@ export const router = createBrowserRouter([
                 path: 'my-profile',
                 element: <Profile />
             },
-
         ]
     }
 ])

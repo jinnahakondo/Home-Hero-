@@ -11,11 +11,11 @@ const MainLayout = () => {
         return <Loader />
     }
     return (
-        <div className=''>
+        <div className='min-h-screen bg-base-100 text-base-content'>
             <header>
                 <Navbar />
             </header>
-            <main className=''>
+            <main className='bg-base-100'>
                 <Outlet></Outlet>
             </main>
             <footer>

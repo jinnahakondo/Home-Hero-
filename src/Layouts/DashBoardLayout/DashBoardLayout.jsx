@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Home,
     LayoutDashboard,
@@ -7,21 +6,24 @@ import {
     PlusCircle,
     Settings,
     UserCircle,
-    Wrench
+    Wrench,
+    Moon,
+    Sun
 } from 'lucide-react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router';
 import useRole from '../../Hooks/UseRole';
 import { CalendarCheck } from 'lucide-react';
 import useAuth from '../../Hooks/useAuth';
+import { useTheme } from '../../Components/ThemeProvider/ThemeProvider';
 import { toast } from 'react-toastify';
+import LoadingSpinner from '../../Components/Loading/LoadingSpinner';
 
 const DashBoardLayout = () => {
 
     const { role, isLoading } = useRole();
-
-    const { user, logOut } = useAuth()
-
-    const navigate = useNavigate(null)
+    const { user, logOut } = useAuth();
+    const { theme, toggleTheme } = useTheme();
+    const navigate = useNavigate(null);
 
     const handelLogOut = () => {
         logOut()
@@ -37,14 +39,16 @@ const DashBoardLayout = () => {
         }`;
 
     if (isLoading) {
-        return 'loading...';
+        return <div className='h-screen grid place-items-center'>
+            <LoadingSpinner />
+        </div>
     }
     if (!user) {
         navigate('/auth')
     }
 
     return (
-        <div className="bg-base-100 min-h-screen">
+        <div className="bg-base-100 min-h-screen text-base-content">
             <div className="drawer lg:drawer-open">
                 <input id="my-drawer" type="checkbox" className="drawer-toggle" />
 
@@ -63,13 +67,22 @@ const DashBoardLayout = () => {
                         </div>
 
                         <div className="navbar-end gap-3">
+                            {/* Theme toggle */}
+                            <button
+                                onClick={toggleTheme}
+                                className="btn btn-ghost btn-circle"
+                                aria-label="Toggle theme"
+                            >
+                                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+                            </button>
+
                             <div className="dropdown dropdown-end">
                                 <div tabIndex={0} role="button" className="avatar hover:opacity-80 transition-opacity">
                                     <div className="w-9 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                                         <img src={user?.photoURL || "https://ui-avatars.com/api/?name=" + user?.displayName} alt="profile" />
                                     </div>
                                 </div>
-                                <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-xl bg-base-100 rounded-2xl w-56 border border-base-200">
+                                <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-1 p-2 shadow-xl bg-base-100 rounded-2xl w-56 border border-base-200">
                                     <div className="px-4 py-3 border-b border-base-100 mb-1">
                                         <p className="text-sm font-bold truncate">{user?.displayName}</p>
                                         <p className="text-[10px] opacity-50 truncate">{user?.email}</p>
@@ -113,7 +126,7 @@ const DashBoardLayout = () => {
                                         Overview
                                     </NavLink>
 
-                                    <NavLink end to="/dashboard/user/my-bookings" className={navItemClass}>
+                                    <NavLink to="/dashboard/user/my-bookings" className={navItemClass}>
                                         <CalendarCheck size={18} />
                                         My Bookings
                                     </NavLink>
@@ -145,12 +158,12 @@ const DashBoardLayout = () => {
                                         Overview
                                     </NavLink>
 
-                                    <NavLink end to="/dashboard/admin/add-services" className={navItemClass}>
+                                    <NavLink to="/dashboard/admin/add-services" className={navItemClass}>
                                         <PlusCircle size={18} />
                                         Add Service
                                     </NavLink>
 
-                                    <NavLink end to="/dashboard/admin/my-services" className={navItemClass}>
+                                    <NavLink to="/dashboard/admin/my-services" className={navItemClass}>
                                         <Wrench size={18} />
                                         Services
                                     </NavLink>
@@ -173,7 +186,7 @@ const DashBoardLayout = () => {
                         </nav>
 
                         {/* ===== Bottom User Info ===== */}
-                        <div className="mt-auto pt-4 bg-slate-50 -mx-5 -mb-5 p-5 border-t border-base-200">
+                        <div className="mt-auto pt-4 bg-base -mx-5 -mb-5 p-5 border-t border-base-200">
                             <div className="flex items-center gap-3">
                                 <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs uppercase">
                                     {role?.charAt(0)}

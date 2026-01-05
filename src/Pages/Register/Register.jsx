@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { FcGoogle } from "react-icons/fc";
 import { HiOutlineMail, HiOutlineLockClosed, HiOutlineUser, HiOutlinePhotograph } from "react-icons/hi";
-import Loader from '../../Components/Loader/Loader';
 import useAuth from '../../Hooks/useAuth';
 import instance from '../../Hooks/useAxios';
 
@@ -68,8 +67,6 @@ const Register = () => {
             setLoading(false);
         }
     };
-
-    if (loading) return <Loader />;
 
     return (
         <div className=" flex items-center justify-center px-4 py-12">

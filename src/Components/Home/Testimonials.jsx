@@ -7,14 +7,14 @@ import { testimonials } from "./testimonialsData";
 
 const TestimonialSlider = () => {
     return (
-        <section className="py-20 bg-gray-50">
+        <section className="py-20 bg-base-200">
             <div className="max-w-6xl mx-auto px-6 text-center">
 
                 {/* Header */}
-                <p className="uppercase text-sm text-gray-400 mb-2 tracking-wider">
+                <p className="uppercase text-sm text-primary mb-2 tracking-wider font-semibold">
                     Testimonials
                 </p>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold text-base-content mb-12">
                     What Our Clients Say
                 </h2>
 
@@ -41,10 +41,10 @@ const TestimonialSlider = () => {
                     modules={[EffectCoverflow, Pagination, Autoplay]}
                 >
                     {testimonials.map((item, i) => (
-                        <SwiperSlide key={item.id }>
-                            <div className="bg-white p-8 rounded-xl shadow-lg flex flex-col justify-between h-full">
+                        <SwiperSlide key={item.id}>
+                            <div className="bg-base-100 border border-base-300 p-8 rounded-xl shadow-lg flex flex-col justify-between h-full hover:shadow-xl transition-shadow duration-300">
                                 {/* Quote */}
-                                <p className="text-gray-600 italic mb-6 text-left">
+                                <p className="text-base-content/70 italic mb-6 text-left">
                                     “{item.quote}”
                                 </p>
 
@@ -53,13 +53,13 @@ const TestimonialSlider = () => {
                                     <img
                                         src={item.image}
                                         alt={item.name}
-                                        className="w-14 h-14 rounded-full object-cover"
+                                        className="w-14 h-14 rounded-full object-cover border-2 border-primary/20"
                                     />
                                     <div className="text-left">
-                                        <h4 className="font-semibold text-gray-900">
+                                        <h4 className="font-semibold text-base-content">
                                             {item.name}
                                         </h4>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-base-content/60">
                                             {item.role}
                                         </p>
                                     </div>

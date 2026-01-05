@@ -26,13 +26,13 @@ const WhyChooseUs = () => {
     ];
 
     return (
-        <section className="bg-white pb-20">
+        <section className="bg-base-100 pb-20">
             <div className="container mx-auto px-6 lg:px-12">
                 <div className="text-center mb-14">
-                    <h2 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight ">
+                    <h2 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight text-base-content">
                         Why Choose Us
                     </h2>
-                    <p className="text-gray-400 mt-3">
+                    <p className="text-base-content/70 mt-3">
                         Reliable service you can trust
                     </p>
                 </div>
@@ -41,18 +41,15 @@ const WhyChooseUs = () => {
                     {points.map((item, i) => (
                         <div
                             key={i}
-                            className="text-center p-6 rounded-xl border border-base-300 hover:shadow-md transition"
+                            className="text-center p-6 rounded-xl border border-base-300 hover:shadow-md transition bg-base-100 hover:bg-base-200"
                         >
-                            <div
-                                className="w-14 h-14 mx-auto flex items-center justify-center rounded-full mb-5"
-                                style={{ backgroundColor: "#ff625120", color: "#ff6251" }}
-                            >
+                            <div className="w-14 h-14 mx-auto flex items-center justify-center rounded-full mb-5 bg-primary/10 text-primary">
                                 {item.icon}
                             </div>
-                            <h3 className="font-semibold text-lg ">
+                            <h3 className="font-semibold text-lg text-base-content">
                                 {item.title}
                             </h3>
-                            <p className="text-sm text-gray-400 mt-2">
+                            <p className="text-sm text-base-content/60 mt-2">
                                 {item.desc}
                             </p>
                         </div>
