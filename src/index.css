@@ -24,28 +24,6 @@
   --color-base-content: #1e293b;
   --color-neutral: #64748b;
   --color-neutral-content: #ffffff;
-  --color-info: #3b82f6;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-}
-
-@plugin "daisyui/theme" {
-  name: "dark";
-  --color-primary: #ff6251;
-  --color-secondary: #51aa1b;
-  --color-accent: #050316;
-  --color-base: #0f172a;
-  --color-base-100: #1e293b;
-  --color-base-200: #334155;
-  --color-base-300: #475569;
-  --color-base-content: #f1f5f9;
-  --color-neutral: #64748b;
-  --color-neutral-content: #f1f5f9;
-  --color-info: #60a5fa;
-  --color-success: #34d399;
-  --color-warning: #fbbf24;
-  --color-error: #f87171;
 }
 
 .sidebar-link {
@@ -58,9 +36,10 @@
 
 /* Global Card Styles */
 .service-card {
-  @apply bg-base-100 border border-base-300 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden;
-  height: 400px;
-  /* Consistent height */
+  @apply bg-base-100 border border-base-300 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden;
+  height: 480px;
+  display: flex;
+  flex-direction: column;
 }
 
 .service-card:hover {
@@ -103,9 +82,6 @@
 }
 
 /* Button Styles */
-.btn-primary {
-  @apply bg-primary hover:bg-primary/90 text-white border-primary hover:border-primary/90 transition-all duration-200;
-}
 
 .btn-secondary {
   @apply bg-secondary hover:bg-secondary/90 text-white border-secondary hover:border-secondary/90 transition-all duration-200;

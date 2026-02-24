@@ -1,92 +1,51 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router";
 import useAxios from "../../Hooks/useAxios";
 import Service from "../../Components/Service/Service";
 import { LoadingCardGrid } from "../../Components/Loading/LoadingCard";
 import { ErrorState, EmptyState } from "../../Components/Loading/LoadingStates";
-import { Search, Filter, SlidersHorizontal, Grid, List, ChevronLeft, ChevronRight } from "lucide-react";
+import Breadcrumb from "../../Components/Breadcrumb/Breadcrumb";
+import { Search, Filter, Grid, List, ChevronLeft, ChevronRight } from "lucide-react";
 
 const Services = () => {
     const axios = useAxios();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
-    const [minPrice, setMinPrice] = useState("");
-    const [maxPrice, setMaxPrice] = useState("");
     const [sortBy, setSortBy] = useState("newest");
     const [viewMode, setViewMode] = useState("grid");
     const [currentPage, setCurrentPage] = useState(1);
-    const [showFilters, setShowFilters] = useState(false);
     const itemsPerPage = 12;
 
-    // Mock data fallback
-    const mockServices = [
-        {
-            _id: "1",
-            serviceName: "Professional House Cleaning",
-            price: 120,
-            category: "Cleaning",
-            image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400",
-            description: "Complete house cleaning service including all rooms, kitchen, and bathrooms.",
-            rating: 4.8
-        },
-        {
-            _id: "2",
-            serviceName: "Plumbing Repair Service",
-            price: 85,
-            category: "Plumbing",
-            image: "https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?w=400",
-            description: "Expert plumbing repairs for leaks, clogs, and installations.",
-            rating: 4.6
-        },
-        {
-            _id: "3",
-            serviceName: "Electrical Installation",
-            price: 150,
-            category: "Electrical",
-            image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400",
-            description: "Safe and professional electrical work for your home or office.",
-            rating: 4.9
-        },
-        {
-            _id: "4",
-            serviceName: "Garden Maintenance",
-            price: 95,
-            category: "Gardening",
-            image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400",
-            description: "Complete garden care including pruning, weeding, and lawn maintenance.",
-            rating: 4.7
-        },
-        {
-            _id: "5",
-            serviceName: "Interior Painting",
-            price: 200,
-            category: "Painting",
-            image: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400",
-            description: "Professional interior painting with premium quality paints.",
-            rating: 4.5
-        },
-        {
-            _id: "6",
-            serviceName: "Carpet Cleaning",
-            price: 75,
-            category: "Cleaning",
-            image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400",
-            description: "Deep carpet cleaning using advanced equipment and eco-friendly products.",
-            rating: 4.4
+    // Handle URL parameters for category filtering
+    useEffect(() => {
+        const categoryFromUrl = searchParams.get('category');
+        if (categoryFromUrl) {
+            setSelectedCategory(categoryFromUrl);
+            // Show a notification that category filter is applied
+            const categoryName = categoryFromUrl.charAt(0).toUpperCase() + categoryFromUrl.slice(1);
+            // You could add a toast notification here if desired
         }
-    ];
+    }, [searchParams]);
+
+    // Update URL when category changes
+    const updateCategoryInUrl = (category) => {
+        const newSearchParams = new URLSearchParams(searchParams);
+        if (category && category !== "All Categories") {
+            newSearchParams.set('category', category);
+        } else {
+            newSearchParams.delete('category');
+        }
+        setSearchParams(newSearchParams);
+    };
 
     // Fetch all services using TanStack Query
     const { data: services = [], isLoading, error, refetch } = useQuery({
         queryKey: ["services"],
         queryFn: async () => {
-            try {
-                const res = await axios.get("/services");
-                return Array.isArray(res.data) ? res.data : [];
-            } catch (error) {
-                console.warn("API not available, using mock data");
-                return mockServices;
-            }
+            const res = await axios.get("/services");
+            return Array.isArray(res.data) ? res.data : [];
         },
         keepPreviousData: true,
         retry: 2,
@@ -125,11 +84,7 @@ const Services = () => {
             const matchesCategory = !selectedCategory || selectedCategory === "All Categories" ||
                 (service.category || service.Category || "")?.toLowerCase() === selectedCategory.toLowerCase();
 
-            const servicePrice = service.price || service.Price || 0;
-            const matchesMinPrice = !minPrice || servicePrice >= parseFloat(minPrice);
-            const matchesMaxPrice = !maxPrice || servicePrice <= parseFloat(maxPrice);
-
-            return matchesSearch && matchesCategory && matchesMinPrice && matchesMaxPrice;
+            return matchesSearch && matchesCategory;
         });
 
         // Sort services
@@ -153,7 +108,7 @@ const Services = () => {
         });
 
         return filtered;
-    }, [services, searchTerm, selectedCategory, minPrice, maxPrice, sortBy]);
+    }, [services, searchTerm, selectedCategory, sortBy]);
 
     // Pagination
     const totalPages = Math.ceil(filteredAndSortedServices.length / itemsPerPage);
@@ -167,140 +122,124 @@ const Services = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category);
+        setCurrentPage(1); 
+        updateCategoryInUrl(category);
+    };
+
     const clearFilters = () => {
         setSearchTerm("");
         setSelectedCategory("");
-        setMinPrice("");
-        setMaxPrice("");
         setSortBy("newest");
         setCurrentPage(1);
+        // Clear URL parameters
+        setSearchParams({});
     };
 
     return (
         <div className="min-h-screen bg-base-100 pt-24 pb-12">
             <div className="max-w-7xl mx-auto px-4">
+                {/* Breadcrumb */}
+                <Breadcrumb
+                    items={[
+                        { label: 'Services', href: '/services' },
+                        ...(selectedCategory ? [{ label: `${selectedCategory} Services` }] : [])
+                    ]}
+                />
+
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-base-content mb-4">
                         Professional Services
+                        {selectedCategory && (
+                            <span className="block text-2xl text-primary mt-2">
+                                {selectedCategory} Services
+                            </span>
+                        )}
                     </h1>
                     <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
-                        Find trusted professionals for all your home and business needs
+                        {selectedCategory
+                            ? `Find trusted ${selectedCategory.toLowerCase()} professionals for your needs`
+                            : "Find trusted professionals for all your home and business needs"
+                        }
                     </p>
-                    {error && (
-                        <div className="alert alert-info mt-4 max-w-md mx-auto">
-                            <span className="text-sm">Showing demo services (API not connected)</span>
+                    {selectedCategory && (
+                        <div className="mt-4">
+                            <span className="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                                <Filter className="w-4 h-4" />
+                                Filtered by: {selectedCategory}
+                                <button
+                                    onClick={() => handleCategoryChange("")}
+                                    className="ml-1 hover:bg-primary/20 rounded-full p-1 transition-colors"
+                                    title="Clear category filter"
+                                >
+                                    ×
+                                </button>
+                            </span>
                         </div>
                     )}
                 </div>
 
-                {/* Search and Filter Bar */}
-                <div className="bg-base-100 border border-base-300 rounded-xl p-6 mb-8 shadow-sm">
-                    {/* Search Bar */}
-                    <div className="flex flex-col lg:flex-row gap-4 mb-4">
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/50 w-5 h-5" />
-                            <input
-                                type="text"
-                                placeholder="Search services..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 border border-base-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-base-100 text-base-content"
-                            />
-                        </div>
-
-                        <button
-                            onClick={() => setShowFilters(!showFilters)}
-                            className="btn btn-outline gap-2 lg:hidden"
-                        >
-                            <SlidersHorizontal className="w-4 h-4" />
-                            Filters
-                        </button>
-                    </div>
-
-                    {/* Filters */}
-                    <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 ${showFilters ? 'block' : 'hidden lg:grid'}`}>
-                        <div>
-                            <label className="block text-sm font-medium text-base-content mb-2">Category</label>
-                            <select
-                                value={selectedCategory}
-                                onChange={(e) => setSelectedCategory(e.target.value)}
-                                className="w-full border border-base-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-base-100 text-base-content"
-                            >
-                                {categories.map(category => (
-                                    <option key={category} value={category === "All Categories" ? "" : category}>
-                                        {category}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-base-content mb-2">Min Price</label>
-                            <input
-                                type="number"
-                                placeholder="৳0"
-                                value={minPrice}
-                                onChange={(e) => setMinPrice(e.target.value)}
-                                className="w-full border border-base-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-base-100 text-base-content"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-base-content mb-2">Max Price</label>
-                            <input
-                                type="number"
-                                placeholder="৳1000"
-                                value={maxPrice}
-                                onChange={(e) => setMaxPrice(e.target.value)}
-                                className="w-full border border-base-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-base-100 text-base-content"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-base-content mb-2">Sort By</label>
-                            <select
-                                value={sortBy}
-                                onChange={(e) => setSortBy(e.target.value)}
-                                className="w-full border border-base-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-base-100 text-base-content"
-                            >
-                                <option value="newest">Newest First</option>
-                                <option value="price-low">Price: Low to High</option>
-                                <option value="price-high">Price: High to Low</option>
-                                <option value="rating">Highest Rated</option>
-                                <option value="name">Name A-Z</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    {/* Filter Actions */}
-                    <div className={`flex justify-between items-center mt-4 pt-4 border-t border-base-200 ${showFilters ? 'block' : 'hidden lg:flex'}`}>
-                        <div className="text-sm text-base-content/70">
-                            Showing {paginatedServices.length} of {filteredAndSortedServices.length} services
-                        </div>
-                        <div className="flex gap-2">
-                            <button
-                                onClick={clearFilters}
-                                className="btn btn-ghost btn-sm"
-                            >
-                                Clear Filters
-                            </button>
-                            <div className="flex gap-1">
+                {/* Quick Category Filters */}
+                {!selectedCategory && (
+                    <div className="mb-6">
+                        <h3 className="text-sm font-medium text-base-content mb-3">Quick Filters:</h3>
+                        <div className="flex flex-wrap gap-2">
+                            {categories.slice(1).map(category => ( // Skip "All Categories"
                                 <button
-                                    onClick={() => setViewMode("grid")}
-                                    className={`btn btn-sm ${viewMode === "grid" ? "btn-primary" : "btn-ghost"}`}
+                                    key={category}
+                                    onClick={() => handleCategoryChange(category)}
+                                    className="px-3 py-1 text-sm bg-base-200 hover:bg-primary hover:text-white rounded-full transition-all duration-200"
                                 >
-                                    <Grid className="w-4 h-4" />
+                                    {category}
                                 </button>
-                                <button
-                                    onClick={() => setViewMode("list")}
-                                    className={`btn btn-sm ${viewMode === "list" ? "btn-primary" : "btn-ghost"}`}
-                                >
-                                    <List className="w-4 h-4" />
-                                </button>
-                            </div>
+                            ))}
                         </div>
                     </div>
+                )}
+
+                {/* Ultra-Simplified Filter Bar */}
+                <div className="flex flex-col sm:flex-row gap-3 mb-8">
+                    {/* Search */}
+                    <div className="flex-1 relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-base-content/40 w-4 h-4" />
+                        <input
+                            type="text"
+                            placeholder="Search services..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-9 pr-3 py-2 border border-base-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-base-100 text-base-content text-sm"
+                        />
+                    </div>
+
+                    {/* Category */}
+                    <select
+                        value={selectedCategory}
+                        onChange={(e) => handleCategoryChange(e.target.value)}
+                        className="w-full sm:w-40 border border-base-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-base-100 text-base-content"
+                    >
+                        {categories.map(category => (
+                            <option key={category} value={category === "All Categories" ? "" : category}>
+                                {category}
+                            </option>
+                        ))}
+                    </select>
+
+                    {/* Sort */}
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="w-full sm:w-32 border border-base-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-base-100 text-base-content"
+                    >
+                        <option value="newest">Newest</option>
+                        <option value="price-low">Low Price</option>
+                        <option value="price-high">High Price</option>
+                        <option value="rating">Top Rated</option>
+                        <option value="name">A-Z</option>
+                    </select>
+
+                   
                 </div>
 
                 {/* Services Grid/List */}
