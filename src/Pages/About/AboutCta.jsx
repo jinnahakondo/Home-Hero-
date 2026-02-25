@@ -1,6 +1,6 @@
 const AboutCTA = () => {
   return (
-    <section className="py-24 bg-primary text-primary-content">
+    <section className="py-24 bg-primary text-primary-content dark:bg-neutral/30">
       <div className="max-w-4xl mx-auto px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">
           Have Questions or Need Help?

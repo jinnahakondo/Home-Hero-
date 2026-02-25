@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 const CTASection = () => {
   return (
-    <section className="gradient-primary-to-secondary py-20 text-center text-white">
+    <section className="bg-linear-to-r from-primary to-secondary py-20 text-center text-white dark:bg-none dark:bg-neutral/30">
       <div className="max-w-4xl mx-auto px-6">
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
           Need a Reliable Home Service Today?
@@ -19,7 +19,7 @@ const CTASection = () => {
             Call Now
           </a>
           <Link
-            to={'/services'}
+            to={"/services"}
             className="btn btn-outline border-white text-white hover:bg-white hover:text-primary font-semibold px-8 py-3 rounded-lg transition-all duration-200"
           >
             Book Service
