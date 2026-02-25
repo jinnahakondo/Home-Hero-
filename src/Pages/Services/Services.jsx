@@ -206,30 +206,6 @@ const Services = () => {
           )}
         </div>
 
-        {/* Quick Category Filters */}
-        {/* {!selectedCategory && (
-          <div className="mb-6">
-            <h3 className="text-sm font-medium text-base-content mb-3">
-              Quick Filters:
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {categories.slice(1).map(
-                (
-                  category, // Skip "All Categories"
-                ) => (
-                  <button
-                    key={category}
-                    onClick={() => handleCategoryChange(category)}
-                    className="px-3 py-1 text-sm bg-base-200 hover:bg-primary hover:text-white rounded-full transition-all duration-200"
-                  >
-                    {category}
-                  </button>
-                ),
-              )}
-            </div>
-          </div>
-        )} */}
-
         {/* Ultra-Simplified Filter Bar */}
         <div className="flex flex-col sm:flex-row gap-3 mb-8">
           {/* Search */}
