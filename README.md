@@ -25,7 +25,7 @@
 
 
 ### 🔗 Live Demo
-👉 <a href="https://home-hero-b7a6e.web.app/"> HomeHero Demo</a>
+👉 <a href="https://b12-a10-home-hero.vercel.app"> HomeHero Demo</a>
 
 ### How to run the project locally
 1. Clone the repository
